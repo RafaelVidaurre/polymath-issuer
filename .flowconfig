@@ -1,5 +1,5 @@
 [version]
-0.68.0
+0.80.0
 
 [ignore]
 .*incomplete\.js
@@ -13,3 +13,7 @@
 [options]
 
 [strict]
+
+[untyped]
+.*/node_modules/polymath-ui/dist/components/inputs/TimePickerInput
+.*/node_modules/polymath-ui/dist/modules/tx/reducer

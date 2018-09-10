@@ -3606,7 +3606,7 @@ eslint-plugin-jsx-a11y@6.0.2:
     eslint-plugin-polymath PolymathNetwork/eslint-plugin-polymath#3.0.0
     eslint-plugin-react "^7.4.0"
 
-eslint-plugin-polymath@PolymathNetwork/eslint-plugin-polymath:
+eslint-plugin-polymath@PolymathNetwork/eslint-plugin-polymath#3.0.0:
   version "1.0.0"
   resolved "https://codeload.github.com/PolymathNetwork/eslint-plugin-polymath/tar.gz/0d48ee281faddae343a67088fbbeead0052ad310"
   dependencies:
@@ -9123,7 +9123,7 @@ redux-form@7.0.4:
     lodash-es "^4.17.3"
     prop-types "^15.5.9"
 
-redux-mock-store@^1.2.3:
+redux-mock-store@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.5.3.tgz#1f10528949b7ce8056c2532624f7cafa98576c6d"
   dependencies:
@@ -11102,7 +11102,7 @@ web3-core-helpers@1.0.0-beta.34:
     web3-eth-iban "1.0.0-beta.34"
     web3-utils "1.0.0-beta.34"
 
-web3-core-method@1.0.0-beta.30, "web3-core-method@github:bshevchenko/web3-core-method#master":
+web3-core-method@1.0.0-beta.30, web3-core-method@bshevchenko/web3-core-method#master, "web3-core-method@github:bshevchenko/web3-core-method#master":
   version "1.0.0-beta.30"
   resolved "https://codeload.github.com/bshevchenko/web3-core-method/tar.gz/9199df8b1ea8658503ee48ba7ad391fec8e61838"
   dependencies:

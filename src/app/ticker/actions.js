@@ -52,16 +52,18 @@ export const reserve = () => async (dispatch: Function, getState: GetState) => {
         dispatch(ui.faucet(`The reservation of a token symbol has a fixed cost of ${feeView} POLY.`))
         return
       }
-      // eslint-disable-next-line
-      console.log('getState()', getState())
       const { account } = getState().network
-      // eslint-disable-next-line
-      const allowance = await PolyToken.allowance(account, PolyToken.address)
+      const allowance = await PolyToken.allowance(account, TickerRegistry.address)
+
+      const hasSufficientAllowance = allowance.gte(fee)
+
+      let titles = hasSufficientAllowance ? [] : ['Approving POLY Spend']
+      titles = [...titles, 'Reserving Token Symbol']
 
       dispatch(ui.tx(
-        ['Approving POLY Spend', 'Reserving Token Symbol'],
+        titles,
         async () => {
-          await TickerRegistry.registerTicker(details)
+          await TickerRegistry.registerTicker(details, hasSufficientAllowance)
           if (isEmailConfirmed) {
             dispatch(tickerReservationEmail())
           }

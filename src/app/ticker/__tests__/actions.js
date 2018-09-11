@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import BigNumber from 'bignumber.js'
 import type { MockStoreEnhanced } from 'redux-mock-store'
-import { PolyToken } from 'polymathjs'
+import { PolyToken, TickerRegistry } from 'polymathjs'
 import * as actions from '../actions'
 
 jest.mock('polymathjs', () => {
@@ -12,6 +12,7 @@ jest.mock('polymathjs', () => {
       symbol: 'POLY',
       name: 'Polymath Network',
       allowance: jest.fn(),
+      approve: jest.fn(),
     },
     TickerRegistry: {
       registrationFee: jest.fn(() => {
@@ -36,6 +37,9 @@ const mockedStoreState = {
       },
     },
   },
+  network: {
+    account: '0x123',
+  },
 }
 
 const mockStore = configureMockStore([thunk])
@@ -48,12 +52,13 @@ const mockStore = configureMockStore([thunk])
 describe('Actions: reserve', () => {
   let store: MockStoreEnhanced<any>
   beforeEach(() => {
-    PolyToken.allowance.mockImplementation(async () => 0)
+    PolyToken.allowance.mockImplementation(async () => BigNumber(0))
+    PolyToken.approve = jest.fn()
     store = mockStore()
   })
   
   test('requires two transactions by default', async () => {
-    PolyToken.allowance.mockImplementation(async () => 0)
+    PolyToken.allowance.mockImplementation(async () => BigNumber(0))
     store = mockStore(mockedStoreState)
 
     await store.dispatch(actions.reserve())
@@ -67,7 +72,7 @@ describe('Actions: reserve', () => {
   })
 
   test('skips first transaction if previously executed', async () => {
-    PolyToken.allowance.mockImplementation(async () => 250)
+    PolyToken.allowance.mockImplementation(async () => BigNumber(250))
     store = mockStore(mockedStoreState)
 
     await store.dispatch(actions.reserve())
@@ -78,6 +83,8 @@ describe('Actions: reserve', () => {
     expect(txStartAction.type).toEqual('polymath-ui/tx/START')
     expect(txStartAction.titles).toHaveLength(1)
     expect(txStartAction.titles).toEqual(['Reserving Token Symbol'])
+    expect(PolyToken.approve).not.toHaveBeenCalled()
+    expect(TickerRegistry.registerTicker).toHaveBeenCalled()
   })
   
   test.skip('on success shows success message', () => {

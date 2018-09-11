@@ -17,6 +17,7 @@ jest.mock('polymathjs', () => {
       registrationFee: jest.fn(() => {
         return 250
       }),
+      registerTicker: jest.fn(),
     },
   }
 })
@@ -52,31 +53,31 @@ describe('Actions: reserve', () => {
   })
   
   test('requires two transactions by default', async () => {
-    
-  })
-
-  // TODO @RafaelVidaurre: This behavior is not expected in this transaction,
-  // move to test the other flows where PolyApprove actually occurs... Duh!
-  test('skips first transaction if previously executed', async () => {
-    PolyToken.allowance.mockImplementation(async () => 250)
-
-    const storeState = { ...mockedStoreState }
-
-    store = mockStore(storeState)
+    PolyToken.allowance.mockImplementation(async () => 0)
+    store = mockStore(mockedStoreState)
 
     await store.dispatch(actions.reserve())
-    // await store.dispatch(actions.confirm)
-    
-    /**
-     * - Dispatch confirm action
-     * - Check action values
-     */
+    const confirmAction = store.getActions()[0]
+    expect(confirmAction.type).toEqual('polymath-ui/modal/CONFIRM')
+    await confirmAction.onConfirm()
+    const txStartAction = store.getActions()[1]
+    expect(txStartAction.type).toEqual('polymath-ui/tx/START')
+    expect(txStartAction.titles).toHaveLength(2)
+    expect(txStartAction.titles).toEqual(['Approving POLY Spend', 'Reserving Token Symbol'])
+  })
 
-    // FIXME: Action is currently untestable. Logic is provided through
-    // some callback method in action creator
-    // const dispatchedAction = store.getActions()
-    
-    // expect(dispatchedAction.titles).toEqual(['Minting Tokens'])
+  test('skips first transaction if previously executed', async () => {
+    PolyToken.allowance.mockImplementation(async () => 250)
+    store = mockStore(mockedStoreState)
+
+    await store.dispatch(actions.reserve())
+    const confirmAction = store.getActions()[0]
+    expect(confirmAction.type).toEqual('polymath-ui/modal/CONFIRM')
+    await confirmAction.onConfirm()
+    const txStartAction = store.getActions()[1]
+    expect(txStartAction.type).toEqual('polymath-ui/tx/START')
+    expect(txStartAction.titles).toHaveLength(1)
+    expect(txStartAction.titles).toEqual(['Reserving Token Symbol'])
   })
   
   test.skip('on success shows success message', () => {

@@ -2,6 +2,7 @@ import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import BigNumber from 'bignumber.js'
 import type { MockStoreEnhanced } from 'redux-mock-store'
+import { PolyToken } from 'polymathjs'
 import * as actions from '../actions'
 
 jest.mock('polymathjs', () => {
@@ -10,7 +11,7 @@ jest.mock('polymathjs', () => {
       decimals: 18,
       symbol: 'POLY',
       name: 'Polymath Network',
-      allowance: () => 12412  },
+      allowance: jest.fn()  },
   }
 })
 
@@ -43,6 +44,7 @@ const mockStore = configureMockStore([thunk])
 describe('Actions: mintTokens', () => {
   let store: MockStoreEnhanced<any>
   beforeEach(() => {
+    PolyToken.allowance.mockImplementation(async () => 0)
     store = mockStore()
   })
   
@@ -51,6 +53,7 @@ describe('Actions: mintTokens', () => {
     const investorAddresses = [{ address: 'address1' }, { address: 'address2' }]
     const investorTokens = [BigNumber(500), BigNumber(100)]
     const expectedAddresses = investorAddresses.map((investor) => investor.address)
+
     storeState.token.token.contract.mintMulti = jest.fn()
     storeState.token.mint.uploaded = investorAddresses
     storeState.token.mint.uploadedTokens = investorTokens
@@ -59,10 +62,6 @@ describe('Actions: mintTokens', () => {
     const dispatchedAction = store.getActions()[0]
     expect(dispatchedAction.titles).toEqual(['Whitelisting Addresses', 'Minting Tokens'])
     expect(storeState.token.token.contract.mintMulti).toHaveBeenCalledWith(expectedAddresses, investorTokens)
-  })
-
-  test('skips first transaction if previously executed', () => {
-    
   })
 
   test.skip('dispatches tx/START action on start ', () => {

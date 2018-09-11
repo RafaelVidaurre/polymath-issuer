@@ -8249,7 +8249,7 @@ polymath-ui@5.7.0:
     redux "3.7.2"
     redux-form "7.0.4"
 
-polymathjs@1.6.0, polymathjs@^1.6.0:
+polymathjs@1.7.0, polymathjs@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/polymathjs/-/polymathjs-1.6.0.tgz#8eee1a58849fe6594464a35876dc4040f8c5b1d1"
   dependencies:
@@ -8877,15 +8877,6 @@ react-dom@16.2.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-react-dom@^16.5.0:
-  version "16.5.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.0.tgz#57704e5718669374b182a17ea79a6d24922cb27d"
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    schedule "^0.3.0"
-
 react-dropzone@^4.2.9:
   version "4.2.11"
   resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-4.2.11.tgz#c20ff6a62634c5803bed5f292ef1bd4b3e1f90c3"
@@ -9021,15 +9012,6 @@ react@16.2.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
-
-react@^16.5.0:
-  version "16.5.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.5.0.tgz#f2c1e754bf9751a549d9c6d9aca41905beb56575"
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    schedule "^0.3.0"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"

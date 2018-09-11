@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { SecurityTokenRegistry, CountTransferManager } from 'polymathjs'
+import { SecurityTokenRegistry, PolyToken, CountTransferManager } from 'polymathjs'
 import * as ui from 'polymath-ui'
 import moment from 'moment'
 import { ethereumAddress } from 'polymath-ui/dist/validate'
@@ -95,21 +95,35 @@ export const issue = (isLimitNI: boolean) => async (dispatch: Function, getState
       </p>
 
     </div>,
-    async () => {// $FlowFixMe
+    async () => {
+      // $FlowFixMe
       if (getState().pui.account.balance.lt(fee)) {
         dispatch(ui.faucet(`The creation of a security token has a fixed cost of ${feeView} POLY.`))
         return
       }
+      const { account } = getState().network
+      const allowance = await PolyToken.allowance(account, SecurityTokenRegistry.address)
+      const hasSufficientAllowance = allowance.gte(fee)
+
+      let polySpendTitle = hasSufficientAllowance ? [] : ['Approving POLY Spend']
+      let investorsLimitTitle = isLimitNI ? ['Limiting Number Of Investors'] : []
+      
+      const titles = [
+        ...polySpendTitle,
+        'Creating Security Token',
+        ...investorsLimitTitle,
+      ]
+
       dispatch(ui.tx(
-        ['Approving POLY Spend', 'Creating Security Token', ...(isLimitNI ? ['Limiting Number Of Investors'] : [])],
-        async () => {
+        titles,
+        async () => {          
           const { values } = getState().form[completeFormName]
           token = {
             ...getState().token.token,
             ...values,
           }
           token.isDivisible = token.isDivisible !== '1'
-          const receipt = await SecurityTokenRegistry.generateSecurityToken(token)
+          const receipt = await SecurityTokenRegistry.generateSecurityToken(token, hasSufficientAllowance)
 
           if (isLimitNI) {
             token = await SecurityTokenRegistry.getTokenByTicker(ticker)

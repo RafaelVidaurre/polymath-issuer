@@ -57,8 +57,8 @@ export const reserve = () => async (dispatch: Function, getState: GetState) => {
 
       const hasSufficientAllowance = allowance.gte(fee)
 
-      let titles = hasSufficientAllowance ? [] : ['Approving POLY Spend']
-      titles = [...titles, 'Reserving Token Symbol']
+      const polySpendTitle = hasSufficientAllowance ? [] : ['Approving POLY Spend']
+      const titles = [...polySpendTitle, 'Reserving Token Symbol']
 
       dispatch(ui.tx(
         titles,

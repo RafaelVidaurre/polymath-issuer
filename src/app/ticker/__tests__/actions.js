@@ -53,7 +53,6 @@ describe('Actions: reserve', () => {
   let store: MockStoreEnhanced<any>
   beforeEach(() => {
     PolyToken.allowance.mockImplementation(async () => BigNumber(0))
-    PolyToken.approve = jest.fn()
     store = mockStore()
   })
   
@@ -69,6 +68,7 @@ describe('Actions: reserve', () => {
     expect(txStartAction.type).toEqual('polymath-ui/tx/START')
     expect(txStartAction.titles).toHaveLength(2)
     expect(txStartAction.titles).toEqual(['Approving POLY Spend', 'Reserving Token Symbol'])
+    expect(TickerRegistry.registerTicker).toHaveBeenCalledWith(expect.any(Object), false)
   })
 
   test('skips first transaction if previously executed', async () => {
@@ -83,8 +83,8 @@ describe('Actions: reserve', () => {
     expect(txStartAction.type).toEqual('polymath-ui/tx/START')
     expect(txStartAction.titles).toHaveLength(1)
     expect(txStartAction.titles).toEqual(['Reserving Token Symbol'])
+    expect(TickerRegistry.registerTicker).toHaveBeenCalledWith(expect.any(Object), true)
     expect(PolyToken.approve).not.toHaveBeenCalled()
-    expect(TickerRegistry.registerTicker).toHaveBeenCalled()
   })
   
   test.skip('on success shows success message', () => {
